@@ -1,7 +1,7 @@
 # Unit 10 OOP Homework: Template Engine - Employee Summary
 
 [Project link](https://github.com/suzylebel/Team-Generator) 
-[Deployed Page]()
+
 
 ## Table Of Contents
   1. [About the Project-Template Enginer](#About-the-Project)
