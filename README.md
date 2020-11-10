@@ -9,7 +9,7 @@ so that I have quick access to emails and GitHub profiles
 ```
 
 ## Tests 
-![All Tests pass](./Assets/Untitled_ Nov 9, 2020 5_20 PM.gif)
+![All Tests pass](./Assets/test.gif)
 
 
 
