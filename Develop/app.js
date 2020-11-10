@@ -4,11 +4,10 @@ const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 
 //include html files?
-const mainhtml = require("./templates/main.html");
-const managerhtml = require("./templates/maanger.html");
-const engingeerhtml = require("./templates/engineer.html");
-const internhtml = require("./templates/intern.html")
-
+// const mainhtml = require("./templates/main.html");
+// const managerhtml = require("./templates/maanger.html");
+// const engingeerhtml = require("./templates/engineer.html");
+// const internhtml = require("./templates/intern.html")
 
 // npm packages
 const inquirer = require("inquirer");
@@ -22,187 +21,165 @@ const render = require("./lib/htmlRenderer");
 
 const finalTeam = [];
 
+
 // prompt questions for user on CLI- delted this from test.js file given to us. putting in app.js
-const APP = () => {
+function init() {
     console.log("Get ready to build your team!")
-inquirer
-.prompt([ 
-    {
-    type: 'input',
-    name: 'name',
-    message: 'what is your name?',
-},
-{
-    type: 'input',
-    name: 'role',
-    message: 'what is your role?',
-},
-{
-    type: 'input',
-    name: 'email',
-    message: 'what is your email?',
-},
-{
-    type: 'input',
-    name: 'id',
-    message: 'what is your office id #?',
-    validate(value) {
-        const valid = !isNaN(parseFloat(value));
-        return valid || "Please enter a number.";
-    }
-},
-    
-])
-}
-
-function addTeammembers (){
-    inquirer
-    .prompt([
-        {
-        type: 'list',
-        name: "addMembers",
-        message: "What would you like to do next?",
-        choices: [
-            "Add a manager",
-            "Add an Intern",
-            "Add an Engineer",
-            "See my team!"
-        ]
-        }
-    ])
-    .then(answers => {
-        switch (answers.addMembers){
-            case "Add a manager": {
-                promptManager();
-            break;
-            }
-            case 'Add an Intern': {
-                 promptIntern();
-            break;
-            }
-            case 'Add an Engineer': {
-                promptEngineer();
-            break;    
-            }
-            case "See my team!": {
-                createHtmlTeam();
-            break;    
-            }
-        }
-    });
-}
-
-const promptManager = () => {
-    console.log("Enter information for Manager ");
-    inquirer
-    .prompt([
+    inquirer.prompt([
         {
             type: 'input',
-            name: 'managerName',
-            message: "What is the Manager  name", 
+            name: 'name',
+            message: 'what is the name of your Manager?',
         },
         {
             type: 'input',
-            name: 'ManagerID',
-            message: "What is the Manager ID", 
+            name: 'id',
+            message: 'what is their employee Id?',
         },
         {
             type: 'input',
-            name: 'managerEmail',
-            message: "What is the Manager email", 
+            name: 'email',
+            message: 'what is your Managers email?',
         },
         {
             type: 'input',
             name: 'officeNumber',
-            message: "What is the Manager's Office Number?", 
-        }
-        .then(response => {
-            const Manager = new Manager(
-            response.managerName,
-            response.managerID,
-            response.managerEmail,
-            response.officeNumber,
-            );
-        })
-    ])
+            message: 'what is your managers office number',
+            validate(value) {
+                const valid = !isNaN(parseFloat(value));
+                return valid || "Please enter a number.";
+            }
+        },
+    ]).then((response) => {
+        const manager = new Manager(
+            response.name,
+            response.id,
+            response.email,
+            response.officeNumber
+        );
+        finalTeam.push(manager);
+        addTeammembers()
+    })
+
 }
 
-const promptEngineer = () => {
+
+function addTeammembers() {
+    inquirer
+        .prompt([
+            {
+                type: 'list',
+                name: "addMembers",
+                message: "What would you like to do next?",
+                choices: [
+                    "Add an Intern",
+                    "Add an Engineer",
+                    "See my team!"
+                ]
+            }
+        ]).then((answers) => {
+            switch (answers.addMembers) {
+                case 'Add an Intern': {
+                    promptIntern();
+                    break;
+                }
+                case 'Add an Engineer': {
+                    promptEngineer();
+                    break;
+                }
+                case "See my team!": {
+                    // const writefinalteam = finalTeam.join('');
+                    createHtmlTeam();
+                    break;
+                }
+            }
+        });
+}
+
+
+function promptEngineer() {
     console.log("Enter information for Engineer");
     inquirer
-    .prompt([
-        {
-            type: 'input',
-            name: 'engineerName',
-            message: "What is the Engineers name", 
-        },
-        {
-            type: 'input',
-            name: 'engineerID',
-            message: "What is the Engineers ID", 
-        },
-        {
-            type: 'input',
-            name: 'engineerEmail',
-            message: "What is the Engineers email", 
-        },
-        {
-            type: 'input',
-            name: 'engineerGithub',
-            message: "What is the Engineers Github Username", 
-        }
-        .then(response => {
-            const Engineer = new Engineer(
-            response.engineerName,
-            response.engineerID,
-            response.engineerEmail,
-            response.engineergithub,
+        .prompt([
+            {
+                type: 'input',
+                name: 'name',
+                message: "What is the Engineers name",
+            },
+            {
+                type: 'input',
+                name: 'id',
+                message: "What is the Engineers ID",
+            },
+            {
+                type: 'input',
+                name: 'email',
+                message: "What is the Engineers email",
+            },
+            {
+                type: 'input',
+                name: 'github',
+                message: "What is the Engineers Github Username"
+            }
+        ]).then((response) => {
+            const engineer = new Engineer(
+                response.name,
+                response.id,
+                response.email,
+                response.github
             );
+            finalTeam.push(engineer);
+            addTeammembers()
         })
-    ])
+
+
 };
 
-const promptIntern = () => {
+function promptIntern() {
     console.log("Enter information for Intern ");
     inquirer
-    .prompt([
-        {
-            type: 'input',
-            name: 'internName',
-            message: "What is the Intern  name", 
-        },
-        {
-            type: 'input',
-            name: 'internID',
-            message: "What is the Intern ID", 
-        },
-        {
-            type: 'input',
-            name: 'internEmail',
-            message: "What is the Intern email", 
-        },
-        {
-            type: 'input',
-            name: 'internSchool',
-            message: "What is the Intern's School?", 
-        }
-        .then(response => {
-            const Intern = new Intern(
-            response.internName,
-            response.internID,
-            response.internEmail,
-            response.internSchool,
+        .prompt([
+            {
+                type: 'input',
+                name: 'name',
+                message: "What is the Intern  name",
+            },
+            {
+                type: 'input',
+                name: 'id',
+                message: "What is the Intern ID",
+            },
+            {
+                type: 'input',
+                name: 'email',
+                message: "What is the Intern email",
+            },
+            {
+                type: 'input',
+                name: 'school',
+                message: "What is the Intern's School?"
+            }
+        ]).then((response) => {
+            const intern = new Intern(
+                response.name,
+                response.id,
+                response.email,
+                response.school
             );
+            finalTeam.push(intern);
+            addTeammembers()
         })
-    ])
 }
+
+// render function to pass finalteam array. () Figure out where to call render function***
 
 function createHtmlTeam() {
-    const writefinalteam = finalTeam.join('');
-    fs.writeFileSync(outputPath, mainHTML(writefinalteam), "utf-8");
+    fs.writeFileSync(outputPath, render(finalTeam), (err) => {
+        if (err) throw err;
+    });
 }
 
-APP();
+init();
 
 
 // Write code to use inquirer to gather information about the development team members,
